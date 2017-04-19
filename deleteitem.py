@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 # Connection settings
-def connect_db():
+def remove_item():
     settings = {
         'serverName': "localhost",    # The name of the computer running MySQL
         'portNumber': 3306,           # The port of the MySQL server (default is 3306)
@@ -24,8 +24,8 @@ def connect_db():
     connection = conn.connect().connection
     cnx = conn.raw_connection()
     cursor = connection.cursor()
-    print 'Connected to database'
-    test_read = pd.read_sql('SELECT menu_id FROM menu', cnx)
+
+    cursor.execute("call removeMenuItem(1)")
 
     cursor.execute("call getMenu(1)")
     resultsMap = [{

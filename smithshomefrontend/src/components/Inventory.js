@@ -15,6 +15,7 @@ export default class Inventory extends Component {
       [e.target.name]: e.target.value
     }
     this.props.updateItem(key, updatedItem);
+    
   }
 
   renderInventory(key) {
@@ -23,8 +24,8 @@ export default class Inventory extends Component {
       <div className="item-edit" key={key}>
         <input type="text" name="name" value={item.name} placeholder="Item Name" onChange={(e) => this.handleChange(e, key)} />
         <input type="text" name="price" value={item.price} placeholder="Item Price"  onChange={(e) => this.handleChange(e, key)}/>
-
         <textarea type="text" name="desc" value={item.desc} placeholder="Item Desc" onChange={(e) => this.handleChange(e, key)}></textarea>
+        <button onClick={() => this.props.removeItem(key)}>Remove Item</button>
       </div>
     )
   }

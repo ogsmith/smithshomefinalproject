@@ -10,7 +10,6 @@ export default class Item extends Component {
           <span className="price">{details.price}</span>
         </h3>
         <p>{details.desc}</p>
-        <button onClick={() => this.props.addToOrder(index)}></button>
       </li>
     )
   }

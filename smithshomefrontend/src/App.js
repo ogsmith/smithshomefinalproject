@@ -3,6 +3,7 @@ import './styles/App.css';
 import Inventory from './components/Inventory';
 import Item from './components/Items';
 import sampleItems from './sample-items';
+import $ from 'jquery';
 
 
 export default class App extends Component {
@@ -10,8 +11,6 @@ export default class App extends Component {
     super();
 
     this.addItem = this.addItem.bind(this);
-    this.updateItem = this.updateItem.bind(this);
-    this.loadSamples = this.loadSamples.bind(this);
   }
 
   state = {
@@ -24,14 +23,41 @@ export default class App extends Component {
     const timestamp = Date.now();
     items[`item-${timestamp}`] = item;
     this.setState({ items });
+    $.ajax({
+        type: "POST",
+        url: "/../add_item.py",
+        data: { param: item }
+    }).done(function() {
+      console.log("items have been updated");
+  });
   }
 
   updateItem = (key, updatedItem) => {
     const items = {...this.state.items};
     items[key] = updatedItem;
     this.setState({ items });
-  };
+    $.ajax({
+        type: "POST",
+        url: "/../update_item.py",
+        data: { param: updatedItem }
+    }).done(function() {
+      console.log("items have been updated");
+  });
+}
 
+
+  removeItem(key) {
+    const items = {...this.state.items};
+
+      $.ajax({
+          type: "POST",
+          url: "/../backendcode.py",
+          data: { param: items[key] }
+      }).done(function() {
+        this.setState({ items });
+        console.log("items have been removed");
+      })
+    }
 
   loadSamples = () => {
     this.setState({
@@ -47,12 +73,13 @@ export default class App extends Component {
             {
               Object
                 .keys(this.state.items)
-                .map(key => <Item key={key} index={key} details={this.state.items[key]} addToOrder={this.addToOrder}/>)
+                .map(key => <Item key={key} index={key} details={this.state.items[key]}/>)
             }
           </ul>
         </div>
         <Inventory
           addItem={this.addItem}
+          removeItem={this.removeItem}
           loadSamples={this.loadSamples}
           items={this.state.items}
           updateItem={this.updateItem}
